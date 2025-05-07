@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" href="Bilder/faicon.png" type="image/png">
+
+  <title>Login</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    img {
+      margin-bottom: 20px;
+      width: 256px;
+      height: 256px;
+       
+    }
+
+    .input:hover {
+    background-color: #45a049;      /* dunkleres Grün beim Hover */
+    transform: scale(1.2);         /* leichter Zoom beim Hover */
+  
+  }
+
+    .box {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 300px;
+      text-align: center;
+      
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      margin: 8px -10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    input[type="submit"], .register-button {
+      width: 100%;
+      background-color: #007BFF;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-size: 15px;
+    }
+
+    .register-button {
+      background-color: #28a745;
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+      width: 94%;
+      font-size: 15px;
+    }
+    .register-button:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+
+.submit-button:hover {
+    background-color: hsl(224, 52%, 41%);
+    transform: scale(1.05);
+}
+    
+
+    h2 {
+      margin-bottom: 20px;
+    }
+    
+  </style>
+</head>
+<body>
+
+  <img src="Bilder/Logo.png" alt="Logo" >
+
+  <div class="box">
+    <form onsubmit="return checkLogin(event)" action="/login" method="POST">
+      <h2>Login</h2>
+      <input type="text" id="loginUser" placeholder="Benutzername" required>
+      <input type="password" id="loginPass" placeholder="Passwort" required>
+      <input class="submit-button" type="submit" value="Einloggen">
+    </form>
+
+    <!-- Button zur Registrierung -->
+    <a class="register-button" href="register.html">Registrieren</a>
+  </div>
+
+  <script>
+  function checkLogin(event) {
+  event.preventDefault();
+  const user = document.getElementById("loginUser").value.trim();
+  const pass = document.getElementById("loginPass").value;
+
+  console.log("Sende Login-Daten:", { user, pass }); // Debug
+
+  fetch('/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ 
+      benutzername: user, 
+      passwort: pass 
+    })
+  })
+  .then(response => {
+    if (!response.ok) {
+      return response.json().then(err => { throw err; });
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log("Serverantwort:", data); // Debug
+    if (data.success) {
+      window.location.href = "zielseite.html";
+    } else {
+      alert(`Fehler: ${data.message || "Unbekannter Fehler"}`);
+    }
+  })
+  .catch(error => {
+    console.error("Fehlerdetails:", error);
+    alert(`Login fehlgeschlagen: ${error.message || "Serverfehler"}`);
+  });
+}
+  </script>
+
+</body>
+</html>

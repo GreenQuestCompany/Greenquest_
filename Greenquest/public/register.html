@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  
+  <link rel="icon" href="Bilder/faicon.png" type="image/png">
+
+  <title>Registrieren</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .box {
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 300px;
+      text-align: center;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="email"] {
+      width: 100%;
+      padding: 10px;
+      margin: 8px -10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    input[type="submit"] {
+      width: 100%;
+      background-color: #28a745;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    input[type="submit"]:hover {
+      background-color: #218838;
+      transform: scale(1.05);
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    .back-link {
+      display: block;
+      margin-top: 15px;
+      color: #007BFF;
+      text-decoration: none;
+      font-size: 17px;
+    }
+
+    .back-link:hover {
+      text-decoration: underline;
+      transform: scale(1.05);
+    }
+    img {
+      margin-bottom: 20px;
+      width: 256px;
+      height: 256px;
+    }
+  </style>
+</head>
+<body>
+  <img src="Bilder/Logo.png" alt="Logo" style="
+    height: 256px;
+">
+
+  <div class="box">
+
+    <form id="registerForm">
+      <h2>Registrieren</h2>
+      <input type="text" id="registerUser" placeholder="Benutzername" required>
+      <input type="email" id="registerEmail" placeholder="E-Mail" required>
+      <input type="password" id="registerPass" placeholder="Passwort" required>
+      <input type="submit" value="Registrieren">
+    </form>
+
+    <a class="back-link" href="login.html">🔙 Zurück zum Login</a>
+  </div>
+
+  <script>
+    document.getElementById("registerForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+  
+      const user = document.getElementById("registerUser").value;
+      const email = document.getElementById("registerEmail").value;
+      const pass = document.getElementById("registerPass").value;
+  
+      fetch('http://localhost:3000/register', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ benutzername: user, email: email, passwort: pass })
+})
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          alert(data.message);
+          window.location.href = "login.html";
+        } else {
+          alert("Fehler: " + (data.message || "Unbekannter Fehler"));
+        }
+      })
+      .catch(error => {
+        console.error('Fehler:', error);
+        alert('Es gab einen Fehler bei der Registrierung.');
+      });
+    });
+  </script>
+
+</body>
+</html>
